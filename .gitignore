@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Builds
+dist/
+build/
+.vite/
+.vite-temp/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# n8n local runtime data
+n8n-local/.n8n/
+n8n-local/local-files/*
+!n8n-local/local-files/.gitkeep
+n8n-local/n8n_data/
+n8n-local/postgres_data/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
