@@ -1,0 +1,284 @@
+{
+  "id": "vr-local-export-pending",
+  "name": "Export Pending Approval - Review Queue",
+  "active": false,
+  "nodes": [
+    {
+      "id": "ep-note",
+      "name": "Workflow Rules",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -420,
+        -240
+      ],
+      "parameters": {
+        "content": "Exports/reads drafts for human review only.\n\nNo automatic approval. No automatic send. Reviewer must approve or reject manually.",
+        "width": 340,
+        "height": 220,
+        "color": 3
+      }
+    },
+    {
+      "id": "ep-manual",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        80
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "ep-pending",
+      "name": "Read Pending Drafts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -100,
+        80
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.AUTOMATION_API_URL + '/drafts/pending' }}",
+        "sendBody": false,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "{}",
+        "options": {
+          "timeout": 120000
+        }
+      }
+    },
+    {
+      "id": "ep-has-drafts",
+      "name": "Pending Drafts Exist?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        160,
+        80
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "ep-has-drafts-condition",
+              "leftValue": "={{ ($json.drafts || []).length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "ep-risk",
+      "name": "Human Review Routing",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        420,
+        -80
+      ],
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "normal_review",
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "ep-risk-rule-0",
+                    "leftValue": "={{ ($json.drafts || []).filter(d => d.risk_status === 'ok').length }}",
+                    "rightValue": 0,
+                    "operator": {
+                      "type": "number",
+                      "operation": "gt"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "outputKey": "claim_review",
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "ep-risk-rule-1",
+                    "leftValue": "={{ ($json.drafts || []).filter(d => d.risk_status !== 'ok').length }}",
+                    "rightValue": 0,
+                    "operator": {
+                      "type": "number",
+                      "operation": "gt"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      }
+    },
+    {
+      "id": "ep-normal",
+      "name": "Queue: Standard Review",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        700,
+        -220
+      ],
+      "parameters": {
+        "keepOnlySet": false,
+        "values": {
+          "string": [
+            {
+              "name": "next_action",
+              "value": "Open the exported CSV, review message quality, then approve or reject in API/n8n."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ep-claims",
+      "name": "Queue: Claim Guard Review",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        700,
+        0
+      ],
+      "parameters": {
+        "keepOnlySet": false,
+        "values": {
+          "string": [
+            {
+              "name": "next_action",
+              "value": "Review claims_used and risk_status before approval. Do not send automatically."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ep-empty",
+      "name": "No Pending Drafts",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        420,
+        220
+      ],
+      "parameters": {
+        "keepOnlySet": false,
+        "values": {
+          "string": [
+            {
+              "name": "next_action",
+              "value": "Generate drafts manually after importing ready_for_draft contacts."
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Read Pending Drafts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Pending Drafts": {
+      "main": [
+        [
+          {
+            "node": "Pending Drafts Exist?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pending Drafts Exist?": {
+      "main": [
+        [
+          {
+            "node": "Human Review Routing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Pending Drafts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Human Review Routing": {
+      "main": [
+        [
+          {
+            "node": "Queue: Standard Review",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Queue: Claim Guard Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true
+  },
+  "tags": [
+    {
+      "name": "Vanilla Republic Local"
+    },
+    {
+      "name": "No Auto Send"
+    }
+  ]
+}

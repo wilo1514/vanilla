@@ -1,0 +1,565 @@
+{
+  "id": "vr-local-buyer-import",
+  "name": "Buyer XLSX/CSV Import - Decision Tree",
+  "active": false,
+  "nodes": [
+    {
+      "id": "bi-note",
+      "name": "Workflow Rules",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -420,
+        -240
+      ],
+      "parameters": {
+        "content": "Purpose: import buyer spreadsheets, score contacts, and route only valid email contacts toward draft creation.\n\nNo AI. No Apollo. No Hunter. No ZeroBounce. No automatic email sending.\n\nAutomation API owns deterministic normalization and scoring.",
+        "width": 340,
+        "height": 220,
+        "color": 3
+      }
+    },
+    {
+      "id": "bi-manual",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -360,
+        80
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "bi-health",
+      "name": "Preflight: Automation API Health",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -120,
+        80
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.AUTOMATION_API_URL + '/health' }}",
+        "sendBody": false,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "{}",
+        "options": {
+          "timeout": 120000
+        }
+      }
+    },
+    {
+      "id": "bi-api-ok",
+      "name": "API and PostgreSQL Ready?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        120,
+        80
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "bi-api-ok-condition",
+              "leftValue": "={{ $json.ok }}",
+              "rightValue": true,
+              "operator": {
+                "type": "string",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "bi-import",
+      "name": "Import XLSX Mail Lists",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        380,
+        -60
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.AUTOMATION_API_URL + '/contacts/import' }}",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "{}",
+        "options": {
+          "timeout": 120000
+        }
+      }
+    },
+    {
+      "id": "bi-imported",
+      "name": "Any Rows Imported?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        640,
+        -60
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "bi-imported-condition",
+              "leftValue": "={{ $json.rows_imported || 0 }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "bi-report",
+      "name": "Import Report Summary",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        900,
+        -180
+      ],
+      "parameters": {
+        "keepOnlySet": false,
+        "values": {
+          "string": [
+            {
+              "name": "report_type",
+              "value": "mail_list_import"
+            },
+            {
+              "name": "files",
+              "value": "={{ ($json.files || []).join(', ') }}"
+            }
+          ],
+          "number": [
+            {
+              "name": "rows_seen",
+              "value": "={{ $json.rows_seen || 0 }}"
+            },
+            {
+              "name": "rows_imported",
+              "value": "={{ $json.rows_imported || 0 }}"
+            },
+            {
+              "name": "ready_for_draft",
+              "value": "={{ $json.ready_for_draft || 0 }}"
+            },
+            {
+              "name": "needs_manual_review",
+              "value": "={{ $json.needs_manual_review || 0 }}"
+            },
+            {
+              "name": "do_not_contact",
+              "value": "={{ $json.do_not_contact || 0 }}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "bi-route",
+      "name": "Route Import Outcome",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        1160,
+        -180
+      ],
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "ready_for_draft",
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "bi-route-rule-0",
+                    "leftValue": "={{ $json.ready_for_draft || 0 }}",
+                    "rightValue": 0,
+                    "operator": {
+                      "type": "number",
+                      "operation": "gt"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "outputKey": "manual_review",
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "bi-route-rule-1",
+                    "leftValue": "={{ $json.needs_manual_review || 0 }}",
+                    "rightValue": 0,
+                    "operator": {
+                      "type": "number",
+                      "operation": "gt"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "outputKey": "suppressed",
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "id": "bi-route-rule-2",
+                    "leftValue": "={{ $json.do_not_contact || 0 }}",
+                    "rightValue": 0,
+                    "operator": {
+                      "type": "number",
+                      "operation": "gt"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      }
+    },
+    {
+      "id": "bi-score",
+      "name": "Recalculate Lead Priority",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1420,
+        -300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.AUTOMATION_API_URL + '/contacts/score' }}",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "{}",
+        "options": {
+          "timeout": 120000
+        }
+      }
+    },
+    {
+      "id": "bi-generate",
+      "name": "Generate Drafts: Pending Approval Only",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1680,
+        -300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.AUTOMATION_API_URL + '/drafts/generate' }}",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "{ \"limit\": 500 }",
+        "options": {
+          "timeout": 120000
+        }
+      }
+    },
+    {
+      "id": "bi-pending",
+      "name": "Read Pending Approval Queue",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1940,
+        -300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $env.AUTOMATION_API_URL + '/drafts/pending' }}",
+        "sendBody": false,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "{}",
+        "options": {
+          "timeout": 120000
+        }
+      }
+    },
+    {
+      "id": "bi-manual-queue",
+      "name": "Manual Review Queue",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        -80
+      ],
+      "parameters": {
+        "keepOnlySet": false,
+        "values": {
+          "string": [
+            {
+              "name": "next_action",
+              "value": "Review contact forms, supplier portals, phones, and website-only records manually."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "bi-suppression-note",
+      "name": "Suppression Confirmed",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        140
+      ],
+      "parameters": {
+        "keepOnlySet": false,
+        "values": {
+          "string": [
+            {
+              "name": "next_action",
+              "value": "Do not contact suppressed, bounced, unsubscribed, or invalid records."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "bi-no-import",
+      "name": "No New Import Work",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        900,
+        160
+      ],
+      "parameters": {
+        "keepOnlySet": false,
+        "values": {
+          "string": [
+            {
+              "name": "next_action",
+              "value": "No rows were imported. Check source files or duplicates."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "bi-api-down",
+      "name": "Stop: API or Database Not Ready",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        380,
+        260
+      ],
+      "parameters": {
+        "keepOnlySet": false,
+        "values": {
+          "string": [
+            {
+              "name": "next_action",
+              "value": "Start Docker stack and verify /health before retrying."
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Preflight: Automation API Health",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preflight: Automation API Health": {
+      "main": [
+        [
+          {
+            "node": "API and PostgreSQL Ready?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API and PostgreSQL Ready?": {
+      "main": [
+        [
+          {
+            "node": "Import XLSX Mail Lists",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Stop: API or Database Not Ready",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Import XLSX Mail Lists": {
+      "main": [
+        [
+          {
+            "node": "Any Rows Imported?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Any Rows Imported?": {
+      "main": [
+        [
+          {
+            "node": "Import Report Summary",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No New Import Work",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Import Report Summary": {
+      "main": [
+        [
+          {
+            "node": "Route Import Outcome",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Import Outcome": {
+      "main": [
+        [
+          {
+            "node": "Recalculate Lead Priority",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Manual Review Queue",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Suppression Confirmed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No New Import Work",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recalculate Lead Priority": {
+      "main": [
+        [
+          {
+            "node": "Generate Drafts: Pending Approval Only",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Drafts: Pending Approval Only": {
+      "main": [
+        [
+          {
+            "node": "Read Pending Approval Queue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true
+  },
+  "tags": [
+    {
+      "name": "Vanilla Republic Local"
+    },
+    {
+      "name": "No Auto Send"
+    }
+  ]
+}

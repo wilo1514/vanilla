@@ -1,109 +1,63 @@
 import React from 'react';
-import { Box, Container, Grid, Typography, Link, Stack, IconButton } from '@mui/material';
-import { Mail, MapPin, Phone, Instagram, Linkedin, Globe } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Box, Container, IconButton, Link, Stack, Typography } from '@mui/material';
+import { Globe, Instagram, Linkedin, Mail, MapPin } from 'lucide-react';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <Box 
-      component="footer" 
-      sx={{ 
-        bgcolor: '#f8f8f8', 
-        pt: 10, 
-        pb: 4, 
-        borderTop: '1px solid rgba(133, 133, 133, 0.2)',
-        color: 'text.primary'
-      }}
-    >
+    <Box component="footer" sx={{ bgcolor: '#201A14', color: '#fff', pt: 9, pb: 4, borderTop: '1px solid rgba(44,44,44,0.12)' }}>
       <Container>
-        <Grid container spacing={6}>
-          {/* Columna 1: Branding y Propósito */}
-          <Grid item xs={12} md={4}>
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              transition={{ duration: 1 }}
-            >
-              <Typography variant="h6" sx={{ color: '#858585', fontWeight: 800, mb: 2, letterSpacing: 1 }}>
-                THE VANILLA REPUBLIC
-              </Typography>
-              <Typography variant="body2" sx={{ mb: 3, lineHeight: 1.7, color: 'text.secondary' }}>
-                A carbon-neutral initiative dedicated to the cultivation and export of premium Ecuadorian vanilla beans. Bridging the gap between sustainable agriculture and global gourmet excellence.
-              </Typography>
-              <Stack direction="row" spacing={1}>
-                <IconButton size="small" sx={{ color: '#858585' }}><Instagram size={20} /></IconButton>
-                <IconButton size="small" sx={{ color: '#858585' }}><Linkedin size={20} /></IconButton>
-                <IconButton size="small" sx={{ color: '#858585' }}><Globe size={20} /></IconButton>
-              </Stack>
-            </motion.div>
-          </Grid>
-
-          {/* Columna 2: Ubicaciones Estratégicas */}
-          <Grid item xs={12} md={4}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 3 }}>Strategic Locations</Typography>
-            <Stack spacing={3}>
-              <Box>
-                <Typography variant="caption" sx={{ color: '#858585', fontWeight: 700, textTransform: 'uppercase' }}>
-                  Headquarters
-                </Typography>
-                <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', mt: 0.5 }}>
-                  <MapPin size={16} style={{ marginRight: 8, color: '#858585' }} /> 
-                  Cuenca, Azuay - Ecuador
-                </Typography>
-              </Box>
-              <Box>
-                <Typography variant="caption" sx={{ color: '#858585', fontWeight: 700, textTransform: 'uppercase' }}>
-                  Plantations
-                </Typography>
-                <Typography variant="body2" sx={{ display: 'flex', alignItems: 'center', mt: 0.5 }}>
-                  <MapPin size={16} style={{ marginRight: 8, color: '#858585' }} /> 
-                  Guayaquil, Guayas - Ecuador
-                </Typography>
-              </Box>
+        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1.2fr 1fr 1fr' }, gap: 5 }}>
+          <Box>
+            <Typography variant="h6" sx={{ color: '#fff', fontWeight: 900, mb: 1 }}>
+              THE VANILLA REPUBLIC
+            </Typography>
+            <Typography sx={{ color: 'rgba(255,255,255,0.68)', lineHeight: 1.8, maxWidth: 460 }}>
+              Single-origin Ecuadorian Vanilla Tahitensis beans for professional buyers who evaluate flavor with proof.
+            </Typography>
+            <Typography sx={{ mt: 2, fontWeight: 900, color: '#D8B65E' }}>
+              Vanilla. Perfected.
+            </Typography>
+            <Stack direction="row" spacing={1} sx={{ mt: 2 }}>
+              <IconButton size="small" sx={{ color: '#D8B65E' }} aria-label="Instagram"><Instagram size={20} /></IconButton>
+              <IconButton size="small" sx={{ color: '#D8B65E' }} aria-label="LinkedIn"><Linkedin size={20} /></IconButton>
+              <IconButton size="small" sx={{ color: '#D8B65E' }} aria-label="Website"><Globe size={20} /></IconButton>
             </Stack>
-          </Grid>
+          </Box>
 
-          {/* Columna 3: Contacto Directo */}
-          <Grid item xs={12} md={4}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 3 }}>Direct Inquiries</Typography>
+          <Box>
+            <Typography variant="subtitle1" sx={{ fontWeight: 900, mb: 2 }}>
+              Ecuador Origin
+            </Typography>
             <Stack spacing={2}>
-              <Link 
-                href="mailto:info@thevanillarepublic.com" 
-                underline="none" 
-                sx={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  color: 'text.primary',
-                  '&:hover': { color: '#858585' }
-                }}
-              >
-                <Mail size={18} style={{ marginRight: 10, color: '#858585' }} /> 
-                info@thevanillarepublic.com
-              </Link>
-              <Box sx={{ mt: 2, p: 2, border: '1px dashed #858585', borderRadius: 1 }}>
-                <Typography variant="caption" sx={{ display: 'block', fontStyle: 'italic' }}>
-                  Member of the Sustainable Spices Initiative.
-                  <br />Verified Carbon Neutral Process.
-                </Typography>
-              </Box>
+              <Typography sx={{ display: 'flex', alignItems: 'center', color: 'rgba(255,255,255,0.68)' }}>
+                <MapPin size={17} style={{ marginRight: 8, color: '#D8B65E' }} />
+                Naranjal / Guayas, Ecuador
+              </Typography>
+              <Typography sx={{ color: 'rgba(255,255,255,0.68)', lineHeight: 1.7 }}>
+                Estate-grown, estate-cured, and lot-documented for professional review.
+              </Typography>
             </Stack>
-          </Grid>
-        </Grid>
+          </Box>
 
-        {/* Barra Inferior de Copyright */}
-        <Box 
-          sx={{ 
-            mt: 10, 
-            pt: 4, 
-            borderTop: '1px solid rgba(0,0,0,0.05)', 
-            textAlign: 'center' 
-          }}
-        >
-          <Typography variant="caption" color="text.secondary">
-            © {currentYear} THE VANILLA REPUBLIC. All rights reserved. 
-            Designed for the International Gourmet & Wholesale Market.
+          <Box>
+            <Typography variant="subtitle1" sx={{ fontWeight: 900, mb: 2 }}>
+              Buyer Inquiries
+            </Typography>
+            <Link href="mailto:info@thevanillarepublic.com" underline="none" sx={{ display: 'flex', alignItems: 'center', color: '#fff', fontWeight: 800 }}>
+              <Mail size={18} style={{ marginRight: 10, color: '#D8B65E' }} />
+              info@thevanillarepublic.com
+            </Link>
+            <Typography sx={{ mt: 2, color: 'rgba(255,255,255,0.68)', lineHeight: 1.7 }}>
+              Request sample kit details, current lot sheets, or technical documentation.
+            </Typography>
+          </Box>
+        </Box>
+
+        <Box sx={{ mt: 7, pt: 3, borderTop: '1px solid rgba(255,255,255,0.1)', textAlign: 'center' }}>
+          <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.56)' }}>
+            © {currentYear} THE VANILLA REPUBLIC. All rights reserved.
           </Typography>
         </Box>
       </Container>

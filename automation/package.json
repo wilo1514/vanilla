@@ -1,0 +1,51 @@
+{
+  "name": "vanilla-republic-automation",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "dev:hostinger": "tsx watch src/hostinger/server.ts",
+    "dev:docker": "tsx src/server.ts",
+    "build": "tsc -p tsconfig.json",
+    "build:hostinger": "node scripts/build-hostinger.mjs",
+    "start": "node dist/hostinger/server.js",
+    "start:legacy": "node dist/server.js",
+    "db:mysql:init": "tsx src/hostinger/initMysql.ts",
+    "db:init": "tsx src/scripts/initDb.ts",
+    "import:mail-list": "tsx src/scripts/importMailList.ts",
+    "drafts:generate": "tsx src/scripts/generateEmailDrafts.ts",
+    "drafts:export": "tsx src/scripts/exportPendingApproval.ts",
+    "drafts:test-email": "tsx src/scripts/createTestEmailDraft.ts",
+    "suppression:unsubscribes": "tsx src/scripts/importUnsubscribes.ts",
+    "suppression:bounces": "tsx src/scripts/importBounces.ts",
+    "healthcheck": "tsx src/scripts/healthcheck.ts",
+    "local:summary": "tsx src/scripts/localSummary.ts",
+    "hostinger:smoke": "tsx src/hostinger/smokeTest.ts"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "handlebars": "^4.7.8",
+    "imapflow": "^1.4.7",
+    "jsonwebtoken": "^9.0.3",
+    "mysql2": "^3.23.0",
+    "nodemailer": "^9.0.3",
+    "openai": "^6.47.0",
+    "pg": "^8.13.1",
+    "xlsx": "^0.18.5",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.2",
+    "@types/nodemailer": "^8.0.1",
+    "@types/pg": "^8.11.10",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

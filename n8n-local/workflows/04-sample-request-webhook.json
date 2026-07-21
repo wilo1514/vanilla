@@ -1,0 +1,287 @@
+{
+  "id": "vr-local-sample-request",
+  "name": "Sample Request Webhook - Lead Intake",
+  "active": false,
+  "nodes": [
+    {
+      "id": "sr-note",
+      "name": "Workflow Rules",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -520,
+        -260
+      ],
+      "parameters": {
+        "content": "Receives landing form payloads and forwards them to the deterministic API.\n\nAPI normalizes lead, scores it, saves account/contact/sample_request, and creates a new task.\n\nNo outreach is generated automatically.",
+        "width": 340,
+        "height": 220,
+        "color": 3
+      }
+    },
+    {
+      "id": "sr-webhook",
+      "name": "Webhook: Sample Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -460,
+        80
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "vanilla/sample-request",
+        "responseMode": "responseNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "sr-consent",
+      "name": "Consent Is True?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -200,
+        80
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "sr-consent-condition",
+              "leftValue": "={{ $json.body?.consent_to_contact === true }}",
+              "rightValue": true,
+              "operator": {
+                "type": "string",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "sr-email",
+      "name": "Email Format Present?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        60,
+        -80
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "sr-email-condition",
+              "leftValue": "={{ /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test($json.body?.email || '') }}",
+              "rightValue": true,
+              "operator": {
+                "type": "string",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "sr-save",
+      "name": "Save Lead in Automation API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        340,
+        -160
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.AUTOMATION_API_URL + '/webhooks/sample-request' }}",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body || {}) }}",
+        "options": {
+          "timeout": 120000
+        }
+      }
+    },
+    {
+      "id": "sr-saved",
+      "name": "Lead Saved?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        620,
+        -160
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "sr-saved-condition",
+              "leftValue": "={{ $json.ok }}",
+              "rightValue": true,
+              "operator": {
+                "type": "string",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      }
+    },
+    {
+      "id": "sr-response-ok",
+      "name": "Respond: Received",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        900,
+        -260
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { ok: true, message: $json.message, lead_id: $json.lead_id } }}"
+      }
+    },
+    {
+      "id": "sr-response-api-error",
+      "name": "Respond: API Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        900,
+        -40
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseCode": 503,
+        "responseBody": "={{ { ok: false, message: 'Automation API could not save the lead.' } }}"
+      }
+    },
+    {
+      "id": "sr-response-validation",
+      "name": "Respond: Validation Error",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        340,
+        200
+      ],
+      "parameters": {
+        "respondWith": "json",
+        "responseCode": 400,
+        "responseBody": "={{ { ok: false, message: 'Required fields are missing or invalid.' } }}"
+      }
+    }
+  ],
+  "connections": {
+    "Webhook: Sample Request": {
+      "main": [
+        [
+          {
+            "node": "Consent Is True?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consent Is True?": {
+      "main": [
+        [
+          {
+            "node": "Email Format Present?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond: Validation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Format Present?": {
+      "main": [
+        [
+          {
+            "node": "Save Lead in Automation API",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond: Validation Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Lead in Automation API": {
+      "main": [
+        [
+          {
+            "node": "Lead Saved?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead Saved?": {
+      "main": [
+        [
+          {
+            "node": "Respond: Received",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond: API Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true
+  },
+  "tags": [
+    {
+      "name": "Vanilla Republic Local"
+    },
+    {
+      "name": "No Auto Send"
+    }
+  ]
+}

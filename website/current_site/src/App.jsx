@@ -1,10 +1,11 @@
 import React from 'react';
-import { ThemeProvider, CssBaseline, Box } from '@mui/material'; 
+import { ThemeProvider, CssBaseline } from '@mui/material';
 import { theme } from './theme/theme';
 import Navbar from './components/Navbar';
-import Hero from './sections/Hero'; // <--- ESTA ES LA IMPORTACIÓN CLAVE
+import Hero from './sections/Hero';
 import Production from './sections/Production';
 import Sustainability from './sections/Sustainability';
+import EvidenceWindows from './sections/EvidenceWindows';
 import Contact from './sections/Contact';
 import Footer from './components/Footer';
 
@@ -13,10 +14,11 @@ function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Navbar />
-      <Hero /> 
-        <Production />
-        <Sustainability />
-        <Contact />
+      <Hero />
+      <Sustainability />
+      <EvidenceWindows />
+      <Production />
+      <Contact />
       <Footer />
     </ThemeProvider>
   );

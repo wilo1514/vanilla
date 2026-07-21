@@ -6,11 +6,13 @@ dist/
 build/
 .vite/
 .vite-temp/
+deploy/
 
 # Environment and secrets
 .env
 .env.*
 !.env.example
+.deploy-keys/
 
 # n8n local runtime data
 n8n-local/.n8n/
@@ -21,6 +23,9 @@ n8n-local/postgres_data/
 
 # Logs
 logs/
+reports/
+automation/reports/
+docs/qa-screenshots/
 *.log
 npm-debug.log*
 yarn-debug.log*

@@ -1,7 +1,6 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: vanilla_postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -11,27 +10,36 @@ services:
       - "5434:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   automation-api:
     image: node:20-alpine
-    container_name: vanilla_automation_api
     restart: unless-stopped
     working_dir: /app
-    command: sh -c "npm install && npm run dev"
+    command: sh -c "npm install && npm run db:init && npm run dev:docker"
     ports:
       - "3009:3009"
     environment:
       PORT: 3009
       DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       NODE_ENV: development
+      MAIL_LIST_DIR: /mail-list
+      EXPORT_DIR: /files/output
+      PHYSICAL_MAILING_ADDRESS: ${PHYSICAL_MAILING_ADDRESS:-[Physical Mailing Address]}
     volumes:
       - ../automation:/app
+      - ../mail_list:/mail-list:ro
+      - ./local-files:/files
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   n8n:
     image: docker.n8n.io/n8nio/n8n:latest
-    container_name: vanilla_n8n
     restart: unless-stopped
     ports:
       - "5678:5678"
@@ -53,12 +61,16 @@ services:
       N8N_DIAGNOSTICS_ENABLED: "false"
       N8N_PERSONALIZATION_ENABLED: "false"
       AUTOMATION_API_URL: ${AUTOMATION_API_URL}
+      AUTOMATION_API_PUBLIC_URL: ${AUTOMATION_API_PUBLIC_URL:-http://localhost:3009}
     volumes:
       - n8n_data:/home/node/.n8n
       - ./local-files:/files
+      - ./workflows:/workflows:ro
     depends_on:
-      - postgres
-      - automation-api
+      postgres:
+        condition: service_healthy
+      automation-api:
+        condition: service_started
 
 volumes:
   postgres_data:
