@@ -1,6 +1,7 @@
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import fs from "node:fs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const automationRoot = path.resolve(here, "..");
@@ -38,6 +39,10 @@ const websiteEnv = {
   VITE_DEBUG_FORMS: process.env.VITE_DEBUG_FORMS || "false"
 };
 
-npm(["install"], { cwd: websiteRoot });
-npm(["run", "build"], { cwd: websiteRoot, env: websiteEnv });
+if (fs.existsSync(path.join(websiteRoot, "package.json"))) {
+  npm(["install"], { cwd: websiteRoot });
+  npm(["run", "build"], { cwd: websiteRoot, env: websiteEnv });
+} else {
+  console.log("Website folder not found; building API only.");
+}
 run(process.execPath, [path.join(automationRoot, "node_modules", "typescript", "bin", "tsc"), "-p", "tsconfig.json"], { cwd: automationRoot });

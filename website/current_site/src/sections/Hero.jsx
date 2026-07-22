@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
-import { ArrowRight, ClipboardCheck, FileText, FlaskConical } from 'lucide-react';
+import { ArrowRight, ClipboardCheck, FileText, FlaskConical, Sprout } from 'lucide-react';
 import { motion } from 'framer-motion';
-import hero1 from '../assets/hero1.jpeg';
-import hero2 from '../assets/hero2.jpeg';
-import hero3 from '../assets/hero3.jpeg';
-import hero4 from '../assets/hero4.jpeg';
+import flowerImage from '../assets/new_images/flor de vainilla.jpeg';
+import harvestImage from '../assets/new_images/cosecha.jpeg';
+import dryingImage from '../assets/new_images/control_temperatura.jpeg';
+import beanImage from '../assets/new_images/vainas_artistica.jpeg';
 
-const images = [hero1, hero2, hero3, hero4];
+const images = [dryingImage, flowerImage, harvestImage, beanImage];
 
 const trustItems = [
   'Single-Origin Ecuador',
@@ -20,8 +20,9 @@ const trustItems = [
 
 const proofCards = [
   { icon: FlaskConical, label: 'Selected Harvest Result', value: '8,273 ± 847 mg/kg', caption: 'vanillin reported for August 2025 / Harvest 2 sample' },
+  { icon: Sprout, label: 'Estate Process', value: 'Cultivation to curing', caption: 'flowering, harvest, drying, selection, and lot records' },
   { icon: FileText, label: 'Buyer Materials', value: 'Lot sheets', caption: 'documentation before sample or volume discussions' },
-  { icon: ClipboardCheck, label: 'Review Path', value: 'Lot-by-lot', caption: 'sample and documentation requests are matched to current lot context' }
+  { icon: ClipboardCheck, label: 'Review Path', value: 'Lot-by-lot', caption: 'sample requests are matched to current lot context' }
 ];
 
 export default function Hero() {
@@ -54,7 +55,7 @@ export default function Hero() {
         bgcolor: '#0B0907',
         overflow: 'hidden',
         pt: { xs: 10, md: 12 },
-        pb: { xs: 16, md: 13 }
+        pb: { xs: 18, md: 14 }
       }}
     >
       {images.map((image, index) => (
@@ -64,10 +65,10 @@ export default function Hero() {
             position: 'absolute',
             inset: 0,
             backgroundImage: `url(${image})`,
-            backgroundPosition: { xs: 'center', md: 'center right' },
+            backgroundPosition: { xs: 'center', md: index === 0 ? 'center' : 'center right' },
             backgroundSize: 'cover',
-            opacity: index === currentImage ? 0.52 : 0,
-            transform: index === currentImage ? 'scale(1.02)' : 'scale(1)',
+            opacity: index === currentImage ? 0.58 : 0,
+            transform: index === currentImage ? 'scale(1.025)' : 'scale(1)',
             transition: 'opacity 1400ms ease-in-out, transform 5200ms ease-out'
           }}
         />
@@ -78,8 +79,8 @@ export default function Hero() {
           position: 'absolute',
           inset: 0,
           background: {
-            xs: 'linear-gradient(180deg, rgba(11,9,7,0.74), rgba(11,9,7,0.96))',
-            md: 'linear-gradient(90deg, rgba(11,9,7,0.96) 0%, rgba(11,9,7,0.78) 45%, rgba(11,9,7,0.24) 100%)'
+            xs: 'linear-gradient(180deg, rgba(11,9,7,0.74), rgba(11,9,7,0.98))',
+            md: 'linear-gradient(90deg, rgba(11,9,7,0.97) 0%, rgba(11,9,7,0.78) 43%, rgba(11,9,7,0.22) 100%)'
           }
         }}
       />
@@ -89,7 +90,7 @@ export default function Hero() {
           sx={{
             width: '100%',
             display: 'grid',
-            gridTemplateColumns: { xs: '1fr', lg: 'minmax(0, 1.08fr) minmax(360px, 0.62fr)' },
+            gridTemplateColumns: { xs: '1fr', lg: 'minmax(0, 1.05fr) minmax(360px, 0.66fr)' },
             gap: { xs: 5, lg: 7 },
             alignItems: 'end'
           }}
@@ -101,27 +102,9 @@ export default function Hero() {
             transition={{ duration: 0.8 }}
             sx={{ maxWidth: 900 }}
           >
-            <Box
-              component="img"
-              src="/logo.png"
-              alt="The Vanilla Republic"
-              sx={{
-                width: { xs: 210, md: 330 },
-                mb: { xs: 4, md: 5 },
-                filter: 'brightness(0) invert(1)'
-              }}
-            />
+            <Box component="img" src="/logo.png" alt="The Vanilla Republic" sx={{ width: { xs: 210, md: 330 }, mb: { xs: 4, md: 5 }, filter: 'brightness(0) invert(1)' }} />
 
-            <Typography
-              variant="overline"
-              sx={{
-                color: '#D8B65E',
-                letterSpacing: 2,
-                fontWeight: 900,
-                display: 'block',
-                mb: 2
-              }}
-            >
+            <Typography variant="overline" sx={{ color: '#D8B65E', letterSpacing: 2, fontWeight: 900, display: 'block', mb: 2 }}>
               Vanilla. Perfected.
             </Typography>
 
@@ -133,41 +116,22 @@ export default function Hero() {
                 fontWeight: 900,
                 letterSpacing: 0,
                 lineHeight: { xs: 1.05, md: 0.98 },
-                maxWidth: 920
+                maxWidth: 940
               }}
             >
               Single-Origin Ecuadorian Vanilla Tahitensis Beans for Buyers Who Measure Flavor With Proof.
             </Typography>
 
-            <Typography
-              sx={{
-                color: 'rgba(255,255,255,0.82)',
-                mt: 3,
-                maxWidth: 760,
-                fontSize: { xs: '1rem', md: '1.16rem' },
-                lineHeight: 1.75
-              }}
-            >
-              Estate-grown and estate-cured beans for extract houses, flavor houses, specialty distributors,
-              premium food manufacturers, chefs, chocolatiers, and private label buyers.
+            <Typography sx={{ color: 'rgba(255,255,255,0.82)', mt: 3, maxWidth: 780, fontSize: { xs: '1rem', md: '1.16rem' }, lineHeight: 1.75 }}>
+              Estate-grown and estate-cured beans from Naranjal / Guayas, handled through a documented
+              cultivation, harvest, curing, drying, selection, and packing sequence for professional buyers.
             </Typography>
 
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ mt: 4.5, maxWidth: { xs: 380, sm: 'none' } }}>
-              <Button
-                variant="contained"
-                size="large"
-                endIcon={<ArrowRight size={18} />}
-                onClick={scrollToInquiry}
-                sx={{ bgcolor: '#D8B65E', color: '#111', fontWeight: 900, px: 3.5, py: 1.35, '&:hover': { bgcolor: '#E6C978' } }}
-              >
+              <Button variant="contained" size="large" endIcon={<ArrowRight size={18} />} onClick={scrollToInquiry} sx={{ bgcolor: '#D8B65E', color: '#111', fontWeight: 900, px: 3.5, py: 1.35, '&:hover': { bgcolor: '#E6C978' } }}>
                 Request Sample Kit
               </Button>
-              <Button
-                variant="outlined"
-                size="large"
-                onClick={scrollToDocs}
-                sx={{ color: '#fff', borderColor: 'rgba(255,255,255,0.48)', fontWeight: 900, px: 3.5, py: 1.35, '&:hover': { borderColor: '#fff', bgcolor: 'rgba(255,255,255,0.08)' } }}
-              >
+              <Button variant="outlined" size="large" onClick={scrollToDocs} sx={{ color: '#fff', borderColor: 'rgba(255,255,255,0.48)', fontWeight: 900, px: 3.5, py: 1.35, '&:hover': { borderColor: '#fff', bgcolor: 'rgba(255,255,255,0.08)' } }}>
                 Technical Documentation
               </Button>
             </Stack>
@@ -200,17 +164,7 @@ export default function Hero() {
             {proofCards.map((item) => {
               const Icon = item.icon;
               return (
-                <Box
-                  key={item.label}
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: '42px 1fr',
-                    gap: 1.8,
-                    p: { xs: 2.5, md: 3 },
-                    borderBottom: '1px solid rgba(255,255,255,0.1)',
-                    '&:last-of-type': { borderBottom: 0 }
-                  }}
-                >
+                <Box key={item.label} sx={{ display: 'grid', gridTemplateColumns: '42px 1fr', gap: 1.8, p: { xs: 2.4, md: 2.7 }, borderBottom: '1px solid rgba(255,255,255,0.1)', '&:last-of-type': { borderBottom: 0 } }}>
                   <Box sx={{ color: '#D8B65E', pt: 0.4 }}>
                     <Icon size={24} />
                   </Box>
@@ -250,20 +204,7 @@ export default function Hero() {
         <Container>
           <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" justifyContent="center">
             {trustItems.map((item) => (
-              <Typography
-                key={item}
-                variant="caption"
-                sx={{
-                  color: '#2B241C',
-                  fontWeight: 900,
-                  textTransform: 'uppercase',
-                  px: 1.25,
-                  py: 0.7,
-                  border: '1px solid rgba(43,36,28,0.12)',
-                  bgcolor: 'rgba(255,255,255,0.68)',
-                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.7)'
-                }}
-              >
+              <Typography key={item} variant="caption" sx={{ color: '#2B241C', fontWeight: 900, textTransform: 'uppercase', px: 1.25, py: 0.7, border: '1px solid rgba(43,36,28,0.12)', bgcolor: 'rgba(255,255,255,0.68)', boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.7)' }}>
                 {item}
               </Typography>
             ))}

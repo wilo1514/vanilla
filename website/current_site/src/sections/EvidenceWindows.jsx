@@ -1,11 +1,11 @@
 import React from 'react';
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
-import { ArrowRight, BadgeCheck, ClipboardList, FileCheck2, Leaf, MapPin, PackageCheck, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowRight, BadgeCheck, ClipboardList, FileCheck2, MapPin, PackageCheck, ShieldCheck, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
-import originImage from '../assets/hero3.jpeg';
-import beansImage from '../assets/hero2.jpeg';
-import curingImage from '../assets/step2.jpeg';
-import dryingImage from '../assets/step3.jpeg';
+import originImage from '../assets/new_images/cultivo2.jpeg';
+import beansImage from '../assets/new_images/vainas_artistica.jpeg';
+import curingImage from '../assets/new_images/control_temperatura.jpeg';
+import dryingImage from '../assets/new_images/secado2.jpeg';
 
 const evidenceCards = [
   {
@@ -45,8 +45,8 @@ const requestPaths = [
 const imageTiles = [
   { src: originImage, label: 'Origin', title: 'Ecuadorian single-origin review' },
   { src: beansImage, label: 'Beans', title: 'Tahitensis material for buyers' },
-  { src: curingImage, label: 'Curing', title: 'Thermal kill and fermentation step' },
-  { src: dryingImage, label: 'Drying', title: 'Sun drying and shade drying discipline' }
+  { src: curingImage, label: 'Curing', title: 'Temperature-aware curing step' },
+  { src: dryingImage, label: 'Drying', title: 'Drying and selection discipline' }
 ];
 
 export default function EvidenceWindows() {
@@ -59,23 +59,8 @@ export default function EvidenceWindows() {
   };
 
   return (
-    <Box
-      id="evidence-windows"
-      sx={{
-        py: { xs: 9, md: 12 },
-        bgcolor: '#201A14',
-        color: '#fff',
-        position: 'relative',
-        overflow: 'hidden'
-      }}
-    >
-      <Box
-        sx={{
-          position: 'absolute',
-          inset: 0,
-          background: 'radial-gradient(circle at 12% 20%, rgba(216,182,94,0.18), transparent 28%), radial-gradient(circle at 85% 16%, rgba(255,255,255,0.1), transparent 23%), linear-gradient(180deg, #211B15 0%, #100D0A 100%)'
-        }}
-      />
+    <Box id="evidence-windows" sx={{ py: { xs: 9, md: 12 }, bgcolor: '#201A14', color: '#fff', position: 'relative', overflow: 'hidden' }}>
+      <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, #211B15 0%, #100D0A 100%)' }} />
       <Container sx={{ position: 'relative', zIndex: 1 }}>
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '0.92fr 1.08fr' }, gap: { xs: 4, md: 5 }, alignItems: 'stretch' }}>
           <Box
@@ -84,17 +69,10 @@ export default function EvidenceWindows() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.65 }}
-            sx={{
-              minHeight: { xs: 520, md: 680 },
-              borderRadius: 3,
-              overflow: 'hidden',
-              position: 'relative',
-              border: '1px solid rgba(255,255,255,0.16)',
-              boxShadow: '0 34px 100px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.16)'
-            }}
+            sx={{ minHeight: { xs: 520, md: 680 }, borderRadius: 3, overflow: 'hidden', position: 'relative', border: '1px solid rgba(255,255,255,0.16)', boxShadow: '0 34px 100px rgba(0,0,0,0.34)' }}
           >
             <Box component="img" src={originImage} alt="Ecuadorian vanilla origin" sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
-            <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(16,13,10,0.08) 0%, rgba(16,13,10,0.44) 42%, rgba(16,13,10,0.96) 100%)' }} />
+            <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(16,13,10,0.06) 0%, rgba(16,13,10,0.44) 42%, rgba(16,13,10,0.96) 100%)' }} />
             <Box sx={{ position: 'relative', zIndex: 1, height: '100%', p: { xs: 3, md: 4 }, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <Box component="img" src="/icono.png" alt="The Vanilla Republic icon" sx={{ width: 54, height: 54, objectFit: 'contain', filter: 'drop-shadow(0 12px 28px rgba(0,0,0,0.45))' }} />
@@ -112,7 +90,7 @@ export default function EvidenceWindows() {
                   More than aroma: origin, proof, documentation, and review paths.
                 </Typography>
                 <Typography sx={{ color: 'rgba(255,255,255,0.78)', lineHeight: 1.75, fontSize: '1.03rem' }}>
-                  The page now separates the buyer experience into focused windows so sourcing, QA,
+                  The page separates the buyer experience into focused windows so sourcing, QA,
                   formulation, and commercial teams can find the right next step quickly.
                 </Typography>
               </Box>
@@ -130,20 +108,8 @@ export default function EvidenceWindows() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.45, delay: index * 0.05 }}
-                  sx={{
-                    minHeight: 292,
-                    borderRadius: 2,
-                    p: 2.7,
-                    bgcolor: 'rgba(255,255,255,0.08)',
-                    background: 'linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,255,255,0.045))',
-                    border: '1px solid rgba(255,255,255,0.14)',
-                    backdropFilter: 'blur(22px) saturate(145%)',
-                    WebkitBackdropFilter: 'blur(22px) saturate(145%)',
-                    boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.16)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between'
-                  }}
+                  whileHover={{ y: -6 }}
+                  sx={{ minHeight: 292, borderRadius: 2, p: 2.7, bgcolor: 'rgba(255,255,255,0.08)', background: 'linear-gradient(145deg, rgba(255,255,255,0.14), rgba(255,255,255,0.045))', border: '1px solid rgba(255,255,255,0.14)', backdropFilter: 'blur(22px) saturate(145%)', WebkitBackdropFilter: 'blur(22px) saturate(145%)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
                 >
                   <Box sx={{ width: 48, height: 48, display: 'grid', placeItems: 'center', bgcolor: '#D8B65E', color: '#19140F', borderRadius: 1.4 }}>
                     <Icon size={23} />
@@ -167,18 +133,8 @@ export default function EvidenceWindows() {
 
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: 'repeat(4, 1fr)' }, gap: 1.8, mt: 2.2 }}>
           {imageTiles.map((tile, index) => (
-            <Box
-              key={tile.label}
-              sx={{
-                minHeight: { xs: 240, md: index === 1 ? 360 : 300 },
-                mt: { md: index % 2 === 0 ? 0 : 5 },
-                borderRadius: 2,
-                overflow: 'hidden',
-                position: 'relative',
-                border: '1px solid rgba(255,255,255,0.14)'
-              }}
-            >
-              <Box component="img" src={tile.src} alt={tile.title} sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 700ms ease' }} />
+            <Box key={tile.label} component={motion.div} whileHover={{ y: -6 }} sx={{ minHeight: { xs: 240, md: index === 1 ? 360 : 300 }, mt: { md: index % 2 === 0 ? 0 : 5 }, borderRadius: 2, overflow: 'hidden', position: 'relative', border: '1px solid rgba(255,255,255,0.14)' }}>
+              <Box component="img" src={tile.src} alt={tile.title} sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
               <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(16,13,10,0.08), rgba(16,13,10,0.82))' }} />
               <Box sx={{ position: 'relative', zIndex: 1, height: '100%', p: 2.4, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
                 <Typography sx={{ color: '#D8B65E', fontWeight: 900, textTransform: 'uppercase', fontSize: '0.72rem', mb: 0.6 }}>
@@ -192,22 +148,7 @@ export default function EvidenceWindows() {
           ))}
         </Box>
 
-        <Box
-          sx={{
-            mt: { xs: 5, md: 7 },
-            borderRadius: 3,
-            border: '1px solid rgba(255,255,255,0.16)',
-            bgcolor: 'rgba(255,255,255,0.09)',
-            background: 'linear-gradient(145deg, rgba(255,255,255,0.15), rgba(255,255,255,0.055))',
-            backdropFilter: 'blur(24px) saturate(145%)',
-            WebkitBackdropFilter: 'blur(24px) saturate(145%)',
-            p: { xs: 2.6, md: 3.4 },
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', lg: '0.76fr 1.24fr' },
-            gap: { xs: 3, md: 4 },
-            alignItems: 'center'
-          }}
-        >
+        <Box sx={{ mt: { xs: 5, md: 7 }, borderRadius: 3, border: '1px solid rgba(255,255,255,0.16)', bgcolor: 'rgba(255,255,255,0.09)', background: 'linear-gradient(145deg, rgba(255,255,255,0.15), rgba(255,255,255,0.055))', backdropFilter: 'blur(24px) saturate(145%)', WebkitBackdropFilter: 'blur(24px) saturate(145%)', p: { xs: 2.6, md: 3.4 }, display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '0.76fr 1.24fr' }, gap: { xs: 3, md: 4 }, alignItems: 'center' }}>
           <Box>
             <Stack direction="row" spacing={1.3} alignItems="center" sx={{ mb: 1.5 }}>
               <Sparkles size={19} color="#D8B65E" />

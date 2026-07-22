@@ -7,7 +7,7 @@
     "dev": "tsx watch src/server.ts",
     "dev:hostinger": "tsx watch src/hostinger/server.ts",
     "dev:docker": "tsx src/server.ts",
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && node scripts/ensure-hostinger-output.mjs",
     "build:hostinger": "node scripts/build-hostinger.mjs",
     "start": "node dist/hostinger/server.js",
     "start:legacy": "node dist/server.js",
