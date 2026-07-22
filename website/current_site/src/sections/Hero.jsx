@@ -3,11 +3,12 @@ import { Box, Button, Container, Stack, Typography } from '@mui/material';
 import { ArrowRight, ClipboardCheck, FileText, FlaskConical, Sprout } from 'lucide-react';
 import { motion } from 'framer-motion';
 import flowerImage from '../assets/new_images/flor de vainilla.jpeg';
+import greenhouseImage from '../assets/new_images/invernadero2.jpeg';
 import harvestImage from '../assets/new_images/cosecha.jpeg';
-import dryingImage from '../assets/new_images/control_temperatura.jpeg';
+import compostImage from '../assets/new_images/composta_cultivo.jpeg';
 import beanImage from '../assets/new_images/vainas_artistica.jpeg';
 
-const images = [dryingImage, flowerImage, harvestImage, beanImage];
+const images = [flowerImage, greenhouseImage, harvestImage, compostImage, beanImage];
 
 const trustItems = [
   'Single-Origin Ecuador',

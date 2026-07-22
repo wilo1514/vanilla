@@ -92,7 +92,7 @@ const workspaceTabs = [
     points: ['Selected harvest wording', 'Current lot sheet', 'Selected harvest analysis'],
     icon: ShieldCheck,
     stat: '8,273 ± 847 mg/kg',
-    image: dryingImage
+    image: beansImage
   },
   {
     label: 'Origin',

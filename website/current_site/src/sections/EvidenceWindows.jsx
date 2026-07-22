@@ -4,7 +4,7 @@ import { ArrowRight, BadgeCheck, ClipboardList, FileCheck2, MapPin, PackageCheck
 import { motion } from 'framer-motion';
 import originImage from '../assets/new_images/cultivo2.jpeg';
 import beansImage from '../assets/new_images/vainas_artistica.jpeg';
-import curingImage from '../assets/new_images/control_temperatura.jpeg';
+import curingImage from '../assets/new_images/etapa de secado.jpeg';
 import dryingImage from '../assets/new_images/secado2.jpeg';
 
 const evidenceCards = [
@@ -45,7 +45,7 @@ const requestPaths = [
 const imageTiles = [
   { src: originImage, label: 'Origin', title: 'Ecuadorian single-origin review' },
   { src: beansImage, label: 'Beans', title: 'Tahitensis material for buyers' },
-  { src: curingImage, label: 'Curing', title: 'Temperature-aware curing step' },
+  { src: curingImage, label: 'Curing', title: 'Estate curing sequence' },
   { src: dryingImage, label: 'Drying', title: 'Drying and selection discipline' }
 ];
 

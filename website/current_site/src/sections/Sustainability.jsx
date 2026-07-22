@@ -2,17 +2,18 @@ import React from 'react';
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
 import { ArrowRight, ClipboardCheck, FileCheck2, FlaskConical, Leaf, PackageCheck, ShieldCheck, Thermometer } from 'lucide-react';
 import { motion } from 'framer-motion';
-import proofImage from '../assets/new_images/control_temperatura.jpeg';
+import proofImage from '../assets/new_images/revision.jpeg';
 import flowerImage from '../assets/new_images/flor.jpeg';
-import selectionImage from '../assets/new_images/revision.jpeg';
+import selectionImage from '../assets/new_images/secado.jpeg';
 import buyerImage from '../assets/new_images/vainas secas.jpeg';
+import analysisImage from '../assets/new_images/clasificacion.jpeg';
 
 const proofItems = [
   {
     icon: FlaskConical,
     title: 'Independent Analysis',
     text: 'Selected harvests can be supported with third-party analysis and buyer-ready documentation.',
-    image: proofImage
+    image: analysisImage
   },
   {
     icon: FileCheck2,
@@ -74,7 +75,7 @@ export default function Sustainability() {
                 border: '1px solid rgba(255,255,255,0.72)'
               }}
             >
-              <Box component="img" src={proofImage} alt="Temperature-aware vanilla curing" sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+              <Box component="img" src={proofImage} alt="Vanilla lot review and selection" sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
               <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(20,17,14,0.04) 0%, rgba(20,17,14,0.36) 42%, rgba(20,17,14,0.94) 100%)' }} />
               <Box sx={{ position: 'relative', zIndex: 1, minHeight: 'inherit', p: { xs: 3, md: 4 }, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <Stack direction="row" spacing={1.2} alignItems="center">
