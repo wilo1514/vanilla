@@ -16,3 +16,7 @@ if (!fs.existsSync(publicIndex)) {
     "<!doctype html><html><head><meta charset=\"utf-8\"><title>The Vanilla Republic API</title></head><body>The Vanilla Republic API is running.</body></html>\n"
   );
 }
+
+fs.copyFileSync(path.join(process.cwd(), "app.js"), path.join(process.cwd(), "dist", "app.js"));
+fs.copyFileSync(path.join(process.cwd(), "package.json"), path.join(process.cwd(), "dist", "package.json"));
+fs.copyFileSync(path.join(process.cwd(), "package-lock.json"), path.join(process.cwd(), "dist", "package-lock.json"));
