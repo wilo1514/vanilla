@@ -296,7 +296,7 @@ async function createCampaign(){const body={name:document.getElementById('campai
 </script></body></html>`;
 }
 
-const port = Number(process.env.PORT ?? 3009);
+const port = Number(process.env.PORT ?? 3000);
 if (process.env.NODE_ENV !== "test") {
   const server = app.listen(port, () => console.log(`vanilla-republic-hostinger listening on ${port}`));
   process.on("SIGINT", async () => {
