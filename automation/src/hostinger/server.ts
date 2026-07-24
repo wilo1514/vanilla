@@ -71,6 +71,16 @@ function requireAdmin(req: express.Request, res: express.Response, next: express
   next();
 }
 
+app.get("/", (_req, res) => {
+  res.json({
+    ok: true,
+    service: "vanilla-republic-hostinger",
+    message: "The Vanilla Republic automation API is running.",
+    health: "/health",
+    admin: "/admin"
+  });
+});
+
 app.get("/health", async (_req, res, next) => {
   try {
     res.json({
